@@ -1,0 +1,2 @@
+[2026-06-08T07:14:27.085393] BYPASS TRIGGERED | Reason: DEVELOPER_FORCED_BYPASS | Impacted Areas: ['process_user_login']
+[2026-06-08T08:40:59.544939] BYPASS TRIGGERED | Reason: DEVELOPER_FORCED_BYPASS | Impacted Areas: ['process_user_login']
