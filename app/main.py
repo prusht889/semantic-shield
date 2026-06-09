@@ -52,18 +52,18 @@ def run_semantic_shield(raw_code: str, modified_lines: list[int], force_bypass: 
 
 
 if __name__ == "__main__":
-    # SCENARIO TEST: The developer forgot a closing parenthesis and left an unfinished 'if' statement!
+    # Test 2 & 3 Scenario: Clean python code structure containing two independent functions
     user_code_submission = """
 def process_user_login(user_id):
-    if user_id == 
     print("Checking database...")
     return True
 
 def render_homepage():
+    print("Loading interface layout...")
     pass
 """
     has_bypass_flag = "--no-shield" in sys.argv
-    # Simulate a developer modifying line 3 where the broken syntax is located
-    changed_lines = [3]
+    # Simulate editing Line 3 (Inside Login) AND Line 7 (Inside Homepage) simultaneously
+    changed_lines = [3, 7]
 
     run_semantic_shield(user_code_submission, changed_lines, force_bypass=has_bypass_flag)
