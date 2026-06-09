@@ -1,0 +1,9 @@
+# SemanticShield - Python 3.13
+# This project uses only Python standard library modules (ast, datetime, sys).
+# No third-party runtime dependencies are required.
+
+# --- Optional Dev Tools ---
+# Uncomment to install development/testing utilities:
+# pytest==8.3.5
+# black==24.10.0
+# flake8==7.1.1

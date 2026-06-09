@@ -4,6 +4,7 @@ import ast
 class ResilientASTParser:
     def __init__(self, raw_code: str):
         self.raw_code = raw_code
+        self.tree = self.safe_parse()
 
     def safe_parse(self) -> ast.Module:
         """

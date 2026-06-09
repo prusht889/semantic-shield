@@ -28,7 +28,7 @@ def run_semantic_shield(raw_code: str, modified_lines: list[int], force_bypass: 
     print("🛡️ [SemanticShield] Initiating codebase pipeline analysis...")
 
     # 1. Use the Recovery Engine to compile the code tree safely
-    parser = SemanticCodeAnalyzer(raw_code)
+    parser = ResilientASTParser(raw_code)
     ast_tree = parser.tree
 
     # 2. Use the Impact Router to check line changes against the tree structure
@@ -52,8 +52,10 @@ def run_semantic_shield(raw_code: str, modified_lines: list[int], force_bypass: 
 
 
 if __name__ == "__main__":
+    # SCENARIO TEST: The developer forgot a closing parenthesis and left an unfinished 'if' statement!
     user_code_submission = """
 def process_user_login(user_id):
+    if user_id == 
     print("Checking database...")
     return True
 
@@ -61,6 +63,7 @@ def render_homepage():
     pass
 """
     has_bypass_flag = "--no-shield" in sys.argv
+    # Simulate a developer modifying line 3 where the broken syntax is located
     changed_lines = [3]
 
     run_semantic_shield(user_code_submission, changed_lines, force_bypass=has_bypass_flag)
