@@ -1,9 +1,29 @@
 import sys
-from app.core.ast_analyzer import SemanticCodeAnalyzer
 from app.core.recovery_engine import ResilientASTParser
+from app.core.ast_analyzer import SemanticCodeAnalyzer
 from app.core.impact_router import ImpactRouter
 from app.core.gate_engine import ResilientPipelineGate
+from app.core.shadow_router import BlastRadiusIsolator
 
+
+def render_complete_system_blueprint(full_blueprint: dict):
+    """Generates a comprehensive visual map of ALL discovered functional nodes in the target codebase."""
+    print("\n🗺️  [GLOBAL CORE BLUEPRINT: TOTAL MODULE SCHEMA]")
+    print("======================================================================")
+    print("  [Target Codebase Directory Module]")
+    print("                │")
+
+    functions = full_blueprint.get("functions", {})
+    if not functions:
+        print("                └───► (No operational function nodes compiled in this context)")
+    else:
+        # Step through every discovered system function node to draw the complete map
+        for idx, (func_name, meta) in enumerate(functions.items()):
+            is_last = (idx == len(functions) - 1)
+            connector = "└───" if is_last else "├───"
+            print(f"                {connector}► 📦 Node: {func_name}() [Line {meta['line_number']}]")
+
+    print("======================================================================")
 
 
 def render_visual_blueprint(altered_functions: list):
@@ -29,17 +49,29 @@ def run_semantic_shield(raw_code: str, modified_lines: list[int], force_bypass: 
 
     # 1. Use the Recovery Engine to compile the code tree safely
     parser = ResilientASTParser(raw_code)
-    ast_tree = parser.tree
+    ast_tree = parser.safe_parse()
 
-    # 2. Use the Impact Router to check line changes against the tree structure
+    # 2. Extract and display the global code map layout architecture
+    analyzer = SemanticCodeAnalyzer(raw_code)
+    full_blueprint = analyzer.extract_functional_blueprint()
+    render_complete_system_blueprint(full_blueprint)
+
+    # 3. Use the Impact Router to check line changes against the tree structure
     print("⚡ Mapping code structural blast radius...")
     impact_report = ImpactRouter.identify_affected_functions(raw_code, modified_lines)
 
-    # 3. INTERACTIVE UPGRADE: If blocked, print a visual map of the blast radius
+    # 4. If blocked, print a visual map of the blast radius
     if impact_report.get("risk_level") == "HIGH" and not force_bypass:
         render_visual_blueprint(impact_report.get("altered_functions", []))
 
-    # 4. Use the Gate Engine to decide if we block or pass the code change
+    # 5. Deadlock Override Mitigation Hook
+    if force_bypass and impact_report.get("risk_level") == "HIGH":
+        print("\n🛡️ [CONTAINMENT SHIELD ENGINE GENERATION]")
+        print("⚠️ Emergency override bypassed security gates. Compiling isolation schemas...")
+        isolator = BlastRadiusIsolator(impact_report)
+        print(isolator.generate_containment_strategy())
+
+    # 6. Use the Gate Engine to decide if we block or pass the code change
     gate = ResilientPipelineGate(impact_report, force_override=force_bypass)
     is_clear = gate.evaluate_gate_clearance()
 
@@ -52,7 +84,7 @@ def run_semantic_shield(raw_code: str, modified_lines: list[int], force_bypass: 
 
 
 if __name__ == "__main__":
-    # Test 2 & 3 Scenario: Clean python code structure containing two independent functions
+    # Test Scenario: Fleshed-out code structure containing multiple distinct backend system processes
     user_code_submission = """
 def process_user_login(user_id):
     print("Checking database...")
@@ -61,9 +93,13 @@ def process_user_login(user_id):
 def render_homepage():
     print("Loading interface layout...")
     pass
+
+def execute_wire_transfer(amount):
+    print("Processing transaction vectors...")
+    return True
 """
     has_bypass_flag = "--no-shield" in sys.argv
-    # Simulate editing Line 3 (Inside Login) AND Line 7 (Inside Homepage) simultaneously
+    # Simulate a developer modifying lines inside multiple distinct function blocks
     changed_lines = [3, 7]
 
     run_semantic_shield(user_code_submission, changed_lines, force_bypass=has_bypass_flag)
