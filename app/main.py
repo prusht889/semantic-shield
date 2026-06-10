@@ -84,22 +84,16 @@ def run_semantic_shield(raw_code: str, modified_lines: list[int], force_bypass: 
 
 
 if __name__ == "__main__":
-    # Test Scenario: Fleshed-out code structure containing multiple distinct backend system processes
-    user_code_submission = """
-def process_user_login(user_id):
-    print("Checking database...")
-    return True
-
-def render_homepage():
-    print("Loading interface layout...")
-    pass
-
-def execute_wire_transfer(amount):
-    print("Processing transaction vectors...")
-    return True
-"""
+    # PRODUCTION MULTI-FILE SCENARIO: A developer edits the base 'auth_service.py' file!
+    target_file_path = "auth_service.py"
     has_bypass_flag = "--no-shield" in sys.argv
-    # Simulate a developer modifying lines inside multiple distinct function blocks
-    changed_lines = [3, 7]
 
-    run_semantic_shield(user_code_submission, changed_lines, force_bypass=has_bypass_flag)
+    print(f"📖 Reading physical file target from disk: '{target_file_path}'")
+    with open(target_file_path, "r") as f:
+        real_file_contents = f.read()
+
+    # Simulate editing Line 2 (right inside the critical 'validate_vault_token' signature)
+    simulated_changed_lines = [2]
+
+    # Execute the master scanner engine against the real production file stream
+    run_semantic_shield(real_file_contents, simulated_changed_lines, force_bypass=has_bypass_flag)
